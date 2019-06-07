@@ -412,4 +412,4 @@ install(TARGETS oehostverify EXPORT openenclave-targets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/openenclave/host
   COMPONENT OEHOSTVERIFY)
 
-install(TARGETS oehostapp EXPORT openenclave-targets COMPONENT OEHOSTVERIFY)
+install(TARGETS oehostverifyapp EXPORT openenclave-targets COMPONENT OEHOSTVERIFY)

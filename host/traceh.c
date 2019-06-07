@@ -74,7 +74,7 @@ done:
     return level;
 }
 
-static void _initialize_log_config()
+void initialize_log_config()
 {
     if (!_initialized)
     {
@@ -165,13 +165,6 @@ static void _log_session_header()
     }
 }
 
-oe_result_t oe_log_enclave_init(oe_enclave_t* enclave)
-{
-    _initialize_log_config();
-
-    return oe_log_init_ecall(enclave, enclave->path, _log_level);
-}
-
 oe_result_t oe_log(oe_log_level_t level, const char* fmt, ...)
 {
     oe_result_t result = OE_UNEXPECTED;
@@ -217,7 +210,7 @@ void oe_log_message(bool is_enclave, oe_log_level_t level, const char* message)
 {
     if (!_initialized)
     {
-        _initialize_log_config();
+        initialize_log_config();
         _log_session_header();
     }
     if (_initialized)

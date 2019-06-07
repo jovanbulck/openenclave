@@ -32,6 +32,7 @@ void oe_log_message(bool is_enclave, oe_log_level_t level, const char* message);
 
 oe_result_t oe_log(oe_log_level_t level, const char* fmt, ...);
 oe_log_level_t oe_get_current_logging_level(void);
+void initialize_log_config(void);
 
 #define OE_TRACE(level, ...)        \
     do                              \
