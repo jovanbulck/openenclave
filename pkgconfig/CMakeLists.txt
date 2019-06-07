@@ -96,8 +96,8 @@ else()
     set(SGX_LIBS "")
 endif()
 
-set(HOSTVERIFY_CLIBS "-rdynamic -Wl,-z,noexecstack -L\${libdir}/openenclave/host -loehost -ldl -lpthread")
-set(HOST_CLIBS "${HOSTVERIFY_CLIBS}" "${SGX_LIBS}")
+set(HOSTVERIFY_CLIBS "-rdynamic -Wl,-z,noexecstack -L\${libdir}/openenclave/host -loehostverify -ldl -lpthread")
+set(HOST_CLIBS "-rdynamic -Wl,-z,noexecstack -L\${libdir}/openenclave/host -loehost -ldl -lpthread ${SGX_LIBS}")
 
 set(HOSTVERIFY_CXXLIBS "${HOSTVERIFY_CLIBS}")
 set(HOST_CXXLIBS "${HOST_CLIBS}")
