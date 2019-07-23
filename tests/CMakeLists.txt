@@ -25,6 +25,7 @@ add_subdirectory(str)
 if (OE_SGX)
 add_subdirectory(aesm)
 add_subdirectory(debugger)
+add_subdirectory(report)
 endif()
 
 if (UNIX OR ADD_WINDOWS_ENCLAVE_TESTS OR USE_CLANGW)
@@ -91,7 +92,6 @@ if (OE_SGX AND UNIX)
 
    # Attestation supported only on Linux
    add_subdirectory(qeidentity)
-   add_subdirectory(report)
    add_subdirectory(attestation_cert_apis)
    add_subdirectory(tls_e2e)
 endif()

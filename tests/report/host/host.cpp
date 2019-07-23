@@ -14,6 +14,10 @@
 #include "../common/tests.h"
 #include "tests_u.h"
 
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 #define SKIP_RETURN_CODE 2
 
 extern void TestVerifyTCBInfo(
@@ -67,6 +71,32 @@ int main(int argc, const char* argv[])
     sgx_target_info_t target_info;
     oe_result_t result;
     oe_enclave_t* enclave = NULL;
+
+#ifdef _WIN32
+    /* This is a workaround for running in Visual Studio 2017 Test Explorer
+     * where the environment variables are not correctly propagated to the
+     * test. This is resolved in Visual Studio 2019 */
+    WCHAR path[_MAX_PATH];
+
+    if (!GetEnvironmentVariableW(L"SystemRoot", path, _MAX_PATH))
+    {
+        if (GetLastError() != ERROR_ENVVAR_NOT_FOUND)
+            exit(1);
+
+        if (SetEnvironmentVariableW(L"SystemRoot", L"C:\\Windows") == 0)
+            exit(1);
+    }
+
+    if (!GetEnvironmentVariableW(L"LOCALAPPDATA", path, _MAX_PATH))
+    {
+        if (GetLastError() != ERROR_ENVVAR_NOT_FOUND)
+            exit(1);
+
+        if (SetEnvironmentVariableW(
+                L"LOCALAPPDATA", L"C:\\Users\\akagup\\AppData\\Local") == 0)
+            exit(1);
+    }
+#endif
 
     const uint32_t flags = oe_get_create_flags();
     if ((flags & OE_ENCLAVE_FLAG_SIMULATE) != 0)
