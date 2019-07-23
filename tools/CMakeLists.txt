@@ -2,6 +2,7 @@
 # Licensed under the MIT License.
 
 add_subdirectory(oeedger8r)
+add_subdirectory(attestation_tools)
 
 if (OE_SGX)
 add_subdirectory(oesgx)

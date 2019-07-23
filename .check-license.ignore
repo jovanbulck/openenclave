@@ -61,3 +61,4 @@ tools/oeedger8r/\.merlin
 tools/oeedger8r/main\.ml
 tools/oesign/getopt\.h
 tools/oesign/getopt_long\.c
+tools/attestation_tools/pck_cert_inspector/getopt.h
