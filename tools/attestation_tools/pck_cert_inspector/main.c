@@ -2,23 +2,11 @@
 // Licensed under the MIT License.
 
 #include <getopt.h>
-/*
-#include <openenclave/internal/elf.h>
-#include <openenclave/internal/mem.h>
-#include <openenclave/internal/properties.h>
-#include <openenclave/internal/raise.h>
-#include <openenclave/internal/sgxcreate.h>
-#include <openenclave/internal/sgxsign.h>
-#include <openenclave/internal/str.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-*/
 #include "openenclave/corelibc/stdlib.h"
 #include "openenclave/host.h"
-
-#include "../host/sgx/enclave.h"
 #include "openenclave/internal/crypto/cert.h"
+#include "openenclave/internal/defs.h"
+#include "openenclave/internal/hexdump.h"
 #include "openenclave/internal/sgxcertextensions.h"
 
 static const char _usage[] = "Usage: %s --cert CERTIFICATE_FILE\n"
@@ -42,13 +30,11 @@ int pck_cert_inspector(const char* cert_path)
     FILE* f = fopen(cert_path, "r");
     fseek(f, 0, SEEK_END);
     unsigned long cert_size = (unsigned long)ftell(f);
-    fseek(f, 0, SEEK_SET); /* same as rewind(f); */
+    fseek(f, 0, SEEK_SET);
 
     char* cert_pem = malloc(cert_size + 1);
     fread(cert_pem, 1, cert_size, f);
     fclose(f);
-
-    printf("Cert:\n%s\n\n\n", cert_pem);
 
     oe_cert_t pck_cert;
     oe_cert_read_pem(&pck_cert, cert_pem, cert_size + 1);
@@ -61,10 +47,77 @@ int pck_cert_inspector(const char* cert_path)
         ParseSGXExtensions(&pck_cert, buffer, &buffer_size, &parsed_info);
     if (result != OE_OK)
     {
-        printf("Error calling ParseSGXExtensions\n");
+        printf("Error: Unable to parse TCB info in certificate.\n");
     }
 
-    //    printf("parsed_info = %x\n", &(void*)parsed_info);
+    // Use openssl's CLI to print out standard certificate info.
+    size_t cmd_to_run_maxlength = 4096;
+    char* cmd_to_run = calloc(1, cmd_to_run_maxlength);
+    snprintf(
+        cmd_to_run,
+        cmd_to_run_maxlength - 1,
+        "openssl x509 -in %s -text -noout",
+        cert_path);
+    system(cmd_to_run);
+    printf("\n");
+
+    printf("Extracted TCB values (displayed in hexadecimal):\n");
+
+    printf("ppid                 = ");
+    for (size_t count = 0; count < OE_FIELD_SIZE(ParsedExtensionInfo, ppid);
+         ++count)
+    {
+        printf("%02x ", parsed_info.ppid[count]);
+    }
+    printf("\n");
+
+    printf("comp_svn             = ");
+    for (size_t count = 0; count < OE_FIELD_SIZE(ParsedExtensionInfo, comp_svn);
+         ++count)
+    {
+        printf("%02x ", parsed_info.comp_svn[count]);
+    }
+    printf("\n");
+
+    printf("pce_svn              = ");
+    printf("%04x", parsed_info.pce_svn);
+    printf("\n");
+
+    printf("cpu_svn              = ");
+    for (size_t count = 0; count < OE_FIELD_SIZE(ParsedExtensionInfo, cpu_svn);
+         ++count)
+    {
+        printf("%02x ", parsed_info.cpu_svn[count]);
+    }
+    printf("\n");
+
+    printf("pce_id               = ");
+    for (size_t count = 0; count < OE_FIELD_SIZE(ParsedExtensionInfo, pce_id);
+         ++count)
+    {
+        printf("%02x ", parsed_info.pce_id[count]);
+    }
+    printf("\n");
+
+    printf("fmspc                = ");
+    for (size_t count = 0; count < OE_FIELD_SIZE(ParsedExtensionInfo, fmspc);
+         ++count)
+    {
+        printf("%02x ", parsed_info.fmspc[count]);
+    }
+    printf("\n");
+
+    printf("sgx_type             = ");
+    printf("%02x", parsed_info.sgx_type);
+    printf("\n");
+
+    printf("opt_dynamic_platform = ");
+    printf("%d", parsed_info.opt_dynamic_platform);
+    printf("\n");
+
+    printf("opt_cached_keys      = ");
+    printf("%d", parsed_info.opt_cached_keys);
+    printf("\n");
 
     return ret;
 }
@@ -119,7 +172,7 @@ int main(int argc, const char* argv[])
 {
     int ret = 1;
 
-    if (argc <= 2)
+    if (argc <= 1)
     {
         fprintf(stderr, _usage, argv[0]);
         exit(1);
