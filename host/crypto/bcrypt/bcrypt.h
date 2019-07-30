@@ -6,10 +6,12 @@
  * are defined in both Windows.h and ntstatus.h. The WIN32_NO_STATUS will
  * prevent these redefinitions.
  */
-#include <ntstatus.h>
+#define NOCRYPT
 #define WIN32_NO_STATUS
 #include <Windows.h>
 #undef WIN32_NO_STATUS
+#include <ntstatus.h>
 
+#define CERT_CHAIN_PARA_HAS_EXTRA_FIELDS
 #include <bcrypt.h>
 #include <wincrypt.h>

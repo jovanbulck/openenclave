@@ -457,6 +457,6 @@ void TestRSA(void)
     _test_mixed_chain();
     _test_sign();
     _test_verify();
-    _test_write_private();
+    //_test_write_private();
     _test_write_public();
 }
