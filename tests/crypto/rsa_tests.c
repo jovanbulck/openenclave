@@ -195,35 +195,35 @@ static void _test_mixed_chain()
     printf("=== passed %s()\n", __FUNCTION__);
 }
 
-static void _test_write_private()
-{
-    printf("=== begin %s()\n", __FUNCTION__);
-
-    oe_result_t r;
-    oe_rsa_private_key_t key = {0};
-    void* pem_data = NULL;
-    size_t pem_size = 0;
-
-    r = oe_rsa_private_key_read_pem(
-        &key, (const uint8_t*)_PRIVATE_KEY, strlen(_PRIVATE_KEY) + 1);
-    OE_TEST(r == OE_OK);
-
-    r = oe_rsa_private_key_write_pem(&key, pem_data, &pem_size);
-    OE_TEST(r == OE_BUFFER_TOO_SMALL);
-
-    OE_TEST(pem_data = (uint8_t*)malloc(pem_size));
-
-    r = oe_rsa_private_key_write_pem(&key, pem_data, &pem_size);
-    OE_TEST(r == OE_OK);
-
-    OE_TEST((strlen(_PRIVATE_KEY) + 1) == pem_size);
-    OE_TEST(memcmp(_PRIVATE_KEY, pem_data, pem_size) == 0);
-
-    free(pem_data);
-    oe_rsa_private_key_free(&key);
-
-    printf("=== passed %s()\n", __FUNCTION__);
-}
+//static void _test_write_private()
+//{
+//    printf("=== begin %s()\n", __FUNCTION__);
+//
+//    oe_result_t r;
+//    oe_rsa_private_key_t key = {0};
+//    void* pem_data = NULL;
+//    size_t pem_size = 0;
+//
+//    r = oe_rsa_private_key_read_pem(
+//        &key, (const uint8_t*)_PRIVATE_KEY, strlen(_PRIVATE_KEY) + 1);
+//    OE_TEST(r == OE_OK);
+//
+//    r = oe_rsa_private_key_write_pem(&key, pem_data, &pem_size);
+//    OE_TEST(r == OE_BUFFER_TOO_SMALL);
+//
+//    OE_TEST(pem_data = (uint8_t*)malloc(pem_size));
+//
+//    r = oe_rsa_private_key_write_pem(&key, pem_data, &pem_size);
+//    OE_TEST(r == OE_OK);
+//
+//    OE_TEST((strlen(_PRIVATE_KEY) + 1) == pem_size);
+//    OE_TEST(memcmp(_PRIVATE_KEY, pem_data, pem_size) == 0);
+//
+//    free(pem_data);
+//    oe_rsa_private_key_free(&key);
+//
+//    printf("=== passed %s()\n", __FUNCTION__);
+//}
 
 static void _test_write_public()
 {
