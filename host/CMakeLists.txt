@@ -108,6 +108,7 @@ if (OE_SGX)
     ../common/sgx/revocation.c
     ../common/sgx/sgxcertextensions.c
     ../common/sgx/tcbinfo.c
+    sgx/sgxquoteprovider.c
     sgx/hostverify_report.c)
 
   list(APPEND PLATFORM_HOSTVERIFY_SRC ${NEW_HOSTVERIFY_SRC})
@@ -130,7 +131,6 @@ if (OE_SGX)
     sgx/sgxload.c
     sgx/sgxmeasure.c
     sgx/sgxquote.c
-    sgx/sgxquoteprovider.c
     sgx/sgxsign.c
     sgx/sgxtypes.c
     ${NEW_HOSTVERIFY_SRC})
