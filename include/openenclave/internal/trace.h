@@ -21,6 +21,8 @@ typedef enum _oe_log_level
     OE_LOG_LEVEL_MAX
 } oe_log_level_t;
 
+extern oe_log_level_t _log_level;
+
 /* Maximum log length */
 #define OE_LOG_MESSAGE_LEN_MAX 2048U
 #define OE_MAX_FILENAME_LEN 256U

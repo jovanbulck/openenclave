@@ -3,7 +3,20 @@
 
 #include <openenclave/internal/calls.h>
 #include <openenclave/internal/trace.h>
-#include "enclave.h"
+
+#if defined(__x86_64__) || defined(_M_X64)
+#include "sgx/enclave.h"
+#elif defined(__aarch64__) || defined(_M_ARM64)
+#if defined(__linux__)
+#include "optee/linux/enclave.h"
+#else
+#error "OP-TEE is not yet supported on non-Linux platforms."
+#endif
+#else
+#error "Open Enclave is not supported on this architecture."
+#endif
+
+#include "tee_u.h"
 
 /*
  * This file is separated from traceh.c since the host verification library

@@ -108,8 +108,7 @@ if (OE_SGX)
     ../common/sgx/revocation.c
     ../common/sgx/sgxcertextensions.c
     ../common/sgx/tcbinfo.c
-    sgx/hostverify_report.c
-    sgx/traceh.c)
+    sgx/hostverify_report.c)
 
   list(APPEND PLATFORM_HOSTVERIFY_SRC ${NEW_HOSTVERIFY_SRC})
 
@@ -134,13 +133,12 @@ if (OE_SGX)
     sgx/sgxquoteprovider.c
     sgx/sgxsign.c
     sgx/sgxtypes.c
-    sgx/traceh_enclave.c
     ${NEW_HOSTVERIFY_SRC})
 
   # OS specific as well.
   if (UNIX)
     set(NEW_HOSTVERIFY_SRC
-        sgx/linux/sgxquoteprovider.c)
+        sgx/linux/sgxquoteproviderloader.c)
 
     list(APPEND PLATFORM_HOSTVERIFY_SRC ${NEW_HOSTVERIFY_SRC})
 
@@ -151,7 +149,6 @@ if (OE_SGX)
       sgx/linux/entersim.S
       sgx/linux/exception.c
       sgx/linux/sgxioctl.c
-      sgx/linux/sgxquoteproviderloader.c
       sgx/linux/xstate.c
       ${NEW_HOSTVERIFY_SRC})
   else()
@@ -191,7 +188,9 @@ set(NEW_HOSTVERIFY_SRC
   ../common/datetime.c
   ../common/safecrt.c
   hexdump.c
-  result.c)
+  result.c
+  traceh.c
+  traceh_enclave.c)
 
 # Make host verification library for Linux only.
 if (UNIX)
@@ -219,7 +218,6 @@ add_library(oehost STATIC
   signkey.c
   strings.c
   tests.c
-  traceh.c
   ${PLATFORM_SRC}
   ${NEW_HOSTVERIFY_SRC})
 
@@ -239,6 +237,7 @@ add_dependencies(oehost syscall_untrusted_edl)
 add_dependencies(oehost tee_untrusted_edl)
 if(OE_SGX)
     add_dependencies(oehost sgx_untrusted_edl)
+    add_dependencies(oehostverify oehost)
 endif()
 
 # TODO: Replace these with `find_package` and add as dependencies to
@@ -284,6 +283,7 @@ endif ()
 
 # For including edge routines.
 target_include_directories(oehost PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(oehostverify PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 if (USE_LIBSGX)
   if (WIN32)
