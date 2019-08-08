@@ -37,14 +37,17 @@ Remember that security issues should be reported through a separate channel, and
 will receive a response within 24 hours. See [Reporting Security
 Issues](Contributing.md#reporting-security-issues).
 
-Maintainers and Contributors
-----------------------------
+Maintainers, Committers, and Contributors
+-----------------------------------------
 
-We currently define "maintainer" as anyone with direct write access to the Open
-Enclave repository on GitHub, and "contributor" as anyone else. For now, the
-only maintainers are Microsoft employees, but we hope to expand this in the
-future to include consistent contributors. Our process for doing so is not yet
-defined, but if you are interested, let us know!
+We define "maintainer" as members of the Open Enclave "Maintainers Committee",
+as listed in the [maintainers document](Maintainers.md). A "committer" is anyone
+with direct write access to the Open Enclave repository on GitHub, as granted by
+the maintainers committee. All maintainers are committers, but not all
+committers are maintainers. Finally, "contributor" is anyone else.
+
+See the [maintainers document](Maintainers.md) for the current Maintainers
+Committee, and our process for adding new committers and maintainers.
 
 Accepting Contributions
 -----------------------
